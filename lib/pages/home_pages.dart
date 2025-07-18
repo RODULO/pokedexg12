@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedexg12/apiservices/pokemon_api.dart';
+import 'package:pokedexg12/apiservices/pokemon_api_service_http.dart';
 import 'package:pokedexg12/pages/models/pokemon_reponse.dart';
 
 class HomePages extends StatefulWidget {
@@ -32,10 +33,12 @@ class _HomePagesState extends State<HomePages> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () async{
-            final response = await _pokemonApi.getPokemonList();
-            final decoded = pokemonReponseFromJson(response.data);
-            print(decoded.pokemon[1].name);
-            _pokemonApi.getPokemonList(); 
+            // final response = await _pokemonApi.getPokemonList();
+            // final decoded = pokemonReponseFromJson(response.data);
+            // print(decoded.pokemon[1].name);
+            final PokemonReponse? pokemones = await PokemonApiServiceHttp()
+              .getPokemonReponse();
+            print(pokemones!.pokemon[0].name);
           }
         ),
       ),
