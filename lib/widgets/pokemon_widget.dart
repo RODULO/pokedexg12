@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:pokedexg12/pages/models/pokemon_reponse.dart';
+import 'package:pokedexg12/pages/pokemon_detail_page.dart';
 
 class PokemonWidget extends StatefulWidget {
   Pokemon pokemon;
@@ -30,31 +31,47 @@ class _PokemonWidgetState extends State<PokemonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<Color?>(
       future: _dominantColor,
-      builder: (context, AsyncSnapshot) {
-
-        if(!AsyncSnapshot.hasData) {
-          return Center(child: CircularProgressIndicator(),);
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
         }
-        final Color dominantColor = AsyncSnapshot.data?? Colors.white;
-        return Container(
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: dominantColor.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(25),
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Bulbasaur"), Icon(Icons.favorite_border)],
+
+        final Color dominantColor = snapshot.data ?? Colors.white;
+
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => PokemonDetailPage(pokemon: widget.pokemon),
               ),
-              Image.network(widget.pokemon.img),
-            ],
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: dominantColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(widget.pokemon.name),
+                    Icon(Icons.favorite_border),
+                  ],
+                ),
+                Expanded(
+                  child: Image.network(widget.pokemon.img),
+                ),
+              ],
+            ),
           ),
         );
-      }
+      },
     );
   }
 }
